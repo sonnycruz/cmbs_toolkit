@@ -1,8 +1,9 @@
 # cmbs_toolkit
-## (A collection of functions I built to assist my everyday workflow)
 
-This project consists of three parts.
+### (A collection of functions I built to assist my everyday workflow)
 
-1. Automation tasks.
-2. A set of tools to work with data.
-3. An Exploratory Data Analysis Project which utilizes #2.
+This project consists of the following sections...
+
+1. Automation tasks: two functions that prepare the data files for analysis.
+2. CMBS Toolkit: A set of functions to load, clean and analyze data.
+3. EDA: A simple Exploratory Data Analysis project
