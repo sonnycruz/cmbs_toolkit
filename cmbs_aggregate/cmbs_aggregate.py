@@ -108,7 +108,6 @@ def datax_convert(main_folder=main_dir, datax_pattern='*.xls',
     -------
     None
     
-
     Notes
     -----
     * Function should be run in directory containing
