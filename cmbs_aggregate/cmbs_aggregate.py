@@ -61,9 +61,6 @@ def lead_convert(main_folder=main_dir, lead_pattern='Morningstar*',
     else:
         lead_abs_paths = glob.glob(os.path.join(main_folder, lead_pattern))
             
-
-
-
     lead_basenames = [file.split('\\')[-1] for file in lead_abs_paths]
 
     # Read in HTML files, save as CSV. HTML files are moved to HTML folder.
