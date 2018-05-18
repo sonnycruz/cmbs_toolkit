@@ -164,7 +164,7 @@ def datax_convert(main_folder=main_dir, datax_pattern='*.xls',
     for name in dfs.keys():
         dfs[name].to_csv(str(name) + ' ' + date_today + '.csv', index=False)
 
-    "Support Files path: {}".format(
-        os.path.join(main_folder, datax_folders[1]))
+    print("Support Files path: {}".format(
+        os.path.join(main_folder, datax_folders[1])))
 
     return None
