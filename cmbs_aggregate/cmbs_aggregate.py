@@ -83,8 +83,8 @@ def lead_convert(main_folder=main_dir, lead_pattern='Morningstar*',
     final_csv_name = lead_csv.split('.')[0] + ' ' + date_today + '.csv'
     cmbs.to_csv(final_csv_name, index=False)
 
-    "Lead Generator (Combined CSV) path: {}".format(
-        os.path.join(main_folder, lead_folders[2], lead_csv))
+    print("Lead Generator (Combined CSV) path: {}".format(
+        os.path.join(main_folder, lead_folders[2], lead_csv)))
 
     return None
 
