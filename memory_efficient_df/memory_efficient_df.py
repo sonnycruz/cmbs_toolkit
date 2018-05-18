@@ -1,13 +1,5 @@
-# combined CMBS file optimized data types:
-# Function
-# https://www.dataquest.io/blog/pandas-big-data/
-
 import os
 import pandas as pd
-
-main_dir = r'C:\Users\storres.759NYY1\Desktop\cmbu\test1\lead_combined'
-os.chdir(main_dir)
-cm = pd.read_csv('combined.csv')
 
 
 def df_memory(df):
@@ -30,8 +22,8 @@ def optimal_dtypes(df, str_cols_exclude=None, unique_val_thresh=0.5,
 
     unique_val_thresh : float, optional
         series of dtype 'object' will only be converted
-        to dtype 'category' if the ratio of unique values in series
-        to all values in series, is less than unique_val_thresh
+        to dtype 'category' if the ratio of unique values to
+        all values in series, is less than unique_val_thresh
 
     print_to_screen : boolean, optional
         print dict to screen
@@ -39,11 +31,6 @@ def optimal_dtypes(df, str_cols_exclude=None, unique_val_thresh=0.5,
     Returns
     -------
     dictionary {Series_name: Series_dtype....}
-
-    Notes
-    -----
-    * Function will create copy of df and not
-      mutate original df.
     """
     
     df = df.copy()
@@ -51,12 +38,12 @@ def optimal_dtypes(df, str_cols_exclude=None, unique_val_thresh=0.5,
     # INTEGER
     int_dtypes = df.select_dtypes(include=['int64']) # subset of df
     int_downcast = int_dtypes.apply(pd.to_numeric, downcast='unsigned')
-    df.loc[:, [int_downcast.columns]] = int_downcast
+    df.loc[:, [col for col in int_downcast.columns]] = int_downcast
 
     # FLOATS
     float_dtypes = df.select_dtypes(include=['float'])
     float_downcast = float_dtypes.apply(pd.to_numeric, downcast='float')
-    df.loc[:, [float_downcast.columns]] = float_downcast
+    df.loc[:, [col for col in float_downcast.columns]] = float_downcast
 
     # OBJECTS
     obj_dtypes = df.select_dtypes(include=['object'])
@@ -86,6 +73,3 @@ def optimal_dtypes(df, str_cols_exclude=None, unique_val_thresh=0.5,
                 df.dtypes.index, [dtype.name for dtype in df.dtypes.values] 
                 )
             }
-
-exclude_list = ['Deal ID', 'Pros ID']
-df_dtypes = optimal_dtypes(cm, str_cols_exclude=exclude_list)
