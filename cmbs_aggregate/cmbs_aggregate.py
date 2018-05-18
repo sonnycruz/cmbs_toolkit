@@ -10,8 +10,7 @@ main_dir = r'C:\Users\storres.759NYY1\Desktop\cmbu\test1'
 
 
 def lead_convert(main_folder=main_dir, lead_pattern='Morningstar*',
-                lead_csv='combined.csv'):
-    
+                lead_csv='combined.csv', ignore_if_starts_with=None):
     """
     Convert .html files into one .csv file.
 
@@ -22,7 +21,10 @@ def lead_convert(main_folder=main_dir, lead_pattern='Morningstar*',
     lead_pattern : string, default 'Morningstar*'
         File name pattern to match
     lead_csv : string, default 'combined (date).csv'
-        Optional file name for CSV file.
+        Optional file name for CSV file
+    ignore_if_starts_with : string, default None
+        Ignore file names that start with argument
+    
 
     Returns
     -------
@@ -51,7 +53,16 @@ def lead_convert(main_folder=main_dir, lead_pattern='Morningstar*',
 
     [os.mkdir(folder) for folder in lead_folders]
 
-    lead_abs_paths = glob.glob(os.path.join(main_folder, lead_pattern))
+    if ignore_if_starts_with is not None:
+        lead_abs_paths = [
+            file for file in glob.glob(os.path.join(main_folder, lead_pattern))
+            if not os.path.basename(file).startswith(ignore_if_starts_with)
+            ]
+    else:
+        lead_abs_paths = glob.glob(os.path.join(main_folder, lead_pattern))
+            
+
+
 
     lead_basenames = [file.split('\\')[-1] for file in lead_abs_paths]
 
@@ -83,15 +94,14 @@ def lead_convert(main_folder=main_dir, lead_pattern='Morningstar*',
     final_csv_name = lead_csv.split('.')[0] + ' ' + date_today + '.csv'
     cmbs.to_csv(final_csv_name, index=False)
 
-    print("Lead Generator (Combined CSV) path: {}".format(
-        os.path.join(main_folder, lead_folders[2], lead_csv)))
+    print("Lead Generator File Saved in Directory: {}".format(
+        os.path.join(main_folder, lead_folders[2])))
 
     return None
 
 
 def datax_convert(main_folder=main_dir, datax_pattern='*.xls',
                 ignore_if_starts_with='Morningstar'):
-    
     """
     Convert .txt files into .csv files.
 
@@ -114,7 +124,7 @@ def datax_convert(main_folder=main_dir, datax_pattern='*.xls',
       only the files you need (i.e. Lead Generator & 
       Data Export files).
     * Data Export files will have .xls extension but
-      are actually .txt file format.
+      are actually Text (Tab delimited) file format.
     * Column name "Prospectus ID" will be modified
       for consistency with Lead Generator column
       "Pros ID". "Deal ID" & "Pros ID" are the two
@@ -136,10 +146,13 @@ def datax_convert(main_folder=main_dir, datax_pattern='*.xls',
     dfs = {}
 
     # List of files that satisfy datax_pattern & ignore_if_starts_with
-    datax_abs_paths = [
-        file for file in glob.glob(os.path.join(main_folder, datax_pattern))
-        if not os.path.basename(file).startswith(ignore_if_starts_with)
-        ]
+    if ignore_if_starts_with is not None:
+        datax_abs_paths = [
+            file for file in glob.glob(os.path.join(main_folder, datax_pattern))
+            if not os.path.basename(file).startswith(ignore_if_starts_with)
+            ]
+    else:
+        datax_abs_paths = glob.glob(os.path.join(main_folder, datax_pattern))
     
     datax_basenames = [item.lower().split('\\')[-1] for item in datax_abs_paths]
     basenames_no_extensions = [file[:-4] for file in datax_basenames]
@@ -164,7 +177,7 @@ def datax_convert(main_folder=main_dir, datax_pattern='*.xls',
     for name in dfs.keys():
         dfs[name].to_csv(str(name) + ' ' + date_today + '.csv', index=False)
 
-    print("Support Files path: {}".format(
+    print("Data Export Files Saved in Directory: {}".format(
         os.path.join(main_folder, datax_folders[1])))
 
     return None
