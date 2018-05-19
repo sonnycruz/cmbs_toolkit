@@ -240,14 +240,11 @@ def wl_codes(wl_codes_list):
                     | (cmbs['WL Codes'].str.split(',').str.get(5).isin(wl_codes)),
                     :]
 
-def from_dict(cls, data, orient='columns', dtype=None, columns=None):
-
 # Bar Graph Function
 def cmbs_bars(dict_data, ylim_high, ylabel, ylim_low=0, title='',
               y_thousands=True, text_message='', text_c1=0, text_c2=0,
-              style='seaborn-bright', bar_color='darkblue',
-              xtick_rotation=0, xtick_font='large',
-              facecolor='lightgray', grid_line_style='-',
+              style='seaborn-bright', bar_color='darkblue', xtick_rotation=0,
+              xtick_font='large', facecolor='lightgray', grid_line_style='-',
               grid_line_width=0.5, grid_color='gray'):
     """
     Create Bar Graph from dictionary.
