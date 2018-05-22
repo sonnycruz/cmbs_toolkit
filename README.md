@@ -4,9 +4,9 @@
 
 
 ## Data
-The functions contained herein were created to work with Morningstar Credit Ratings' CMBS loan data. The data can only be accessed with a paid subscription to Morningstar's platform.
-URL: https://ratingagency.morningstar.com/mcr
+The functions contained herein were created while working with CMBS loan data. The loan data is proprietary and will not be availble in this repo. 
 
+I hope the functions provide examples of how python/pandas can be utilized when working with excel or csv files within in a business/analyst context.
 
 ## Sections
 
