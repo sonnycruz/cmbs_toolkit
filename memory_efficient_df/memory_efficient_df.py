@@ -1,11 +1,9 @@
 import os
 import pandas as pd
 
-
 def df_memory(df):
     """shortcut function to view df.info(memory_usage='deep')"""
     print(df.info(memory_usage='deep'))
-	
 
 def optimal_dtypes(df, str_cols_exclude=None, unique_val_thresh=0.5,
                    print_to_screen=False):

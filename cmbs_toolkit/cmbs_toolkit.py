@@ -1,19 +1,22 @@
 import os
 import pandas as pd
 import numpy as np
+from functools import partial
+import matplotlib.pyplot as plt
+import matplotlib.patheffects as path_effects
+from mpl_toolkits.basemap import Basemap
 pd.set_option('display.float_format', lambda x: '%.2f' % x)
 
 
-cmbs_u_dir = r'C:\Users\storres.759NYY1\Desktop\cmbu\2.lead_combined'
+cmbs_u_dir = r'C:\Users\storres.759NYY1\Desktop\cmbu\6. all'
 cmbs_u = 'combined.csv'
 
-sup_main_dir = r'C:\Users\storres.759NYY1\Desktop\cmbu\4.sup_csv_files'
+sup_main_dir = r'C:\Users\storres.759NYY1\Desktop\cmbu\6. all'
 irp_loan = 'loan template 5.24.2017.csv'
 irp_prop = 'occ 8.24.2017.csv'
 
 listings_dir = r'C:\Users\storres.759NYY1\Desktop\Legacy Maturities & Universe\19. May 2018\May Assumptions\0. Data\Set 2'
 listings_file = 'New_update_new.csv'
-
 
 def load_cmbs(file, main_folder=cmbs_u_dir, dtype=None, converters=None):
     """Load CSV file as DataFrame."""
@@ -25,24 +28,62 @@ def date_convert(df, col):
     """Convert col in df to datetime format."""
     df[col] = pd.to_datetime(df[col], infer_datetime_format=True)
 
+def year_col(df, col, year_col):
+    df[year_col] = df[col].dt.year
+
+def currency(df, col):
+    df[col] = df[col].str.replace("[$(),]","").fillna(0).astype(float)
+
+def rename_col(df, col, new_name):
+    df.rename(columns={col: new_name}, inplace=True)
+
+def drop_cols(df, col_arg, word=False):
+    """
+    Drop col if col_arg is present in col name.
+        
+    Parameters
+    ----------
+    df : dataframe
+    col_arg : str
+        Can be word in col names to drop or literal column name
+    word : boolean, default False
+        True if col_arg is keyword in columns to be dropped
+        False if col_arg is column name
+        
+    Returns
+    -------
+    None
+    
+    Examples
+    -------
+    >> drop_cols(my_df, col_arg='junk_col')
+    
+    >> drop_cols(my_df, col_arg='junk word', word=True)
+    """
+    if word:
+        df.drop(columns=[col for col in df.columns if col_arg in col],
+                inplace=True)
+    else:
+        df.drop(col_arg, axis=1, inplace=True)
+
 
 # LEAD GENERATOR FILE
 # no dtypes specified results in memory usage: ~214.7 MB
-# memory usage after dtypes specified: ~88.1 MB
+# memory usage after dtypes specified: ~88.1 MB, 85.4MB in ipython
 cmbsu_dtype_practical = {'Priority': 'uint8', 'Tape Date': 'category', 'Run Date': 'category', 'Unnamed: 3': 'float32', 'Deal ID': 'object', 'Pros ID': 'object', 'Servicer Loan ID': 'category', 'Loan Name': 'object', 'Address': 'object', 'City': 'category', 'State': 'category', 'Zip': 'category', 'MSA': 'category', 'Region': 'category', 'Orig. Loan Balance': 'category', 'Cut-off Loan Balance': 'object', 'Current Loan Balance': 'object', 'P&I Advances': 'category', 'T&I Advances': 'category', 'Other Advances Paid': 'category', 'Cumulative ASER': 'category', 'Accrued Unpaid Adv Int': 'category', 'Total Loan Exposure': 'object', 'Unnamed: 23': 'float32', 'Property Type': 'category', 'Property Sub-Type': 'category', '# of Props': 'uint16', 'Gross Coupon': 'float32', 'Net Coupon': 'float32', 'Unnamed: 29': 'float32', 'Rate Type': 'category', 'Orig. Terms to Maturity (months)': 'uint16', 'Current Terms to Maturity (months)': 'uint16', 'Orig. Amort Terms': 'uint16', 'Current Amort Terms': 'int64', 'Orig. IO Terms': 'float32', 'Current IO Terms': 'float32', 'Seasoning': 'uint16', 'Origination Date': 'object', 'Unnamed: 39': 'float32', 'Securitization Year': 'uint16', 'Maturity Date / ARD': 'object', 'Unnamed: 42': 'float32', 'Prin. Pmt.': 'category', 'Int. Pmt.': 'category', 'Unnamed: 45': 'float32', 'Modification Desc.': 'category', 'Modification Date': 'object', 'Unnamed: 48': 'float32', 'Originator': 'category', 'Master Servicer': 'category', 'Special Servicer': 'category', 'Trustee': 'category', 'Borrower Name': 'category', 'Borrower Address': 'category', 'Borrower City': 'category', 'Borrower State': 'category', 'Borrower Zip': 'category', 'Borrower Contact': 'category', 'Borrower Phone #': 'category', 'County Website': 'category', 'Unnamed: 61': 'float32', 'Appraised Value': 'object', 'Unnamed: 63': 'float32', 'Appraised Date': 'object', 'Sq. Ft.': 'float32', 'Units': 'float32', 'Unnamed: 67': 'float32', 'Year Built': 'float32', 'Year Renovated': 'float32', 'Financial Stmt. Date': 'object', 'Revenue Amt.': 'object', 'Expense Amt.': 'object', 'NOI': 'float32', 'NCF': 'float32', 'Debt Yield': 'category', 'DSCR': 'float32', 'Occupancy Rate (%)': 'float32', 'Current LTV': 'float32', 'Original LTV': 'float32', 'Unnamed: 80': 'float32', 'Lockout': 'uint8', 'Defeasance': 'uint8', 'Yield Maint.': 'uint16', 'Prepay Prem': 'uint16', 'Open': 'int64', 'Unnamed: 86': 'float32', 'Current Call Protection Status': 'category', 'Defeasance Cost': 'float32', 'Prepay Prem Amt.': 'object', 'Prepay Prem % of UPB': 'float32', 'Mstar Cap Rate': 'float32', 'Cap Rate Used for Prop Value': 'float32', 'Estimated Property Value': 'object', 'Estimated LTV': 'float32', 'Payoff Amount': 'float32', 'Refinancing Proceeds': 'object', 'Refinancing Proceeds % of UPB': 'object', 'Unnamed: 98': 'float32', 'Loan Status': 'category', 'Special Serviced Ind': 'category', 'MR SS Xfer Date': 'object', 'Unnamed: 102': 'float32', 'Watchlist Ind': 'category', 'Servicer Watchlist Date': 'object', 'WL Codes': 'category', 'Bankruptcy Ind': 'category', 'B-Piece Buyer': 'category', 'Links': 'float32'}
 cmbs = load_cmbs(file=cmbs_u, main_folder=cmbs_u_dir, dtype=cmbsu_dtype_practical)
 
 cmbs_dates = ['MR SS Xfer Date', 'Maturity Date / ARD', 'Origination Date']
 
 for date in cmbs_dates:
-	date_convert(cmbs, date)
-    
+	date_convert(cmbs, date)    
 
 # Convert column into usable integer dtype
-cmbs['Current Loan Balance'] = cmbs['Current Loan Balance'].replace("[$,]","", regex=True).astype(int)
+cm_money = partial(currency, cmbs)
+cm_money('Current Loan Balance')
 
 # Create a categorical column for UPB ranges:
-loan_bins = [0, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 200, 300, 400, 500, 1000, 2000]
+loan_bins = [0, 2, 3, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 200, 300, 400, 500, 1000, 2000]
 cmbs['upb_cat_mm'] = pd.cut(cmbs['Current Loan Balance'] / 1000000, loan_bins)
 
 
@@ -57,7 +98,6 @@ loan_dates = ['Maturity Date', 'Most Recent Appraisal Date',
 
 for date in loan_dates:
 	date_convert(loan, date)
-
               
 loan['app_upb'] = loan['Most Recent Appraised Value'] - loan['Current Balance Amount']
 
@@ -144,18 +184,9 @@ def searchpq(df=prop_active, nm='\w', add='\w', cy= '\w', st='\w', pr='\w'):
                   'Property Address', 'City', 'State', 'Property Type',
                   'Current Balance']]
 
-bad_words = ['ave','Ave',
-             'avenue', 'Avenue',
-             'way', 'Way',
-             'blvd', 'Blvd',
-             'creek', 'Creek', 
-             'park', 'Park',
-             'Properties', 'properties', 'Prop',
-             'Park',
-             'Pky', 'pky',
-             'Fwy', 'fwy',
-             'highway', 'Highway', 'Hwy', 'hwy',
-             'Parkway', 'parkway']
+bad_words = r"(ave|avenue|way|boulevard|blvd|creek|park|"\
+"properties|prop|pky|fwy|"\
+"highway|hwy|parkway)"
 
 # can call next on ab = listing_rows(cs). next(ab)
 def listing_rows(df):
@@ -232,13 +263,24 @@ def wl_codes(wl_codes_list):
     Pass list of single or multiple values
     of watch list codes to locate.
     """
-    return cmbs.loc[(cmbs['WL Codes'].str.split(',').str.get(0).isin(wl_codes))
-                    | (cmbs['WL Codes'].str.split(',').str.get(1).isin(wl_codes))
-                    | (cmbs['WL Codes'].str.split(',').str.get(2).isin(wl_codes))
-                    | (cmbs['WL Codes'].str.split(',').str.get(3).isin(wl_codes))
-                    | (cmbs['WL Codes'].str.split(',').str.get(4).isin(wl_codes))
-                    | (cmbs['WL Codes'].str.split(',').str.get(5).isin(wl_codes)),
+    return cmbs.loc[(cmbs['WL Codes'].str.split(',').str.get(0).isin(wl_codes_list))
+                    | (cmbs['WL Codes'].str.split(',').str.get(1).isin(wl_codes_list))
+                    | (cmbs['WL Codes'].str.split(',').str.get(2).isin(wl_codes_list))
+                    | (cmbs['WL Codes'].str.split(',').str.get(3).isin(wl_codes_list))
+                    | (cmbs['WL Codes'].str.split(',').str.get(4).isin(wl_codes_list))
+                    | (cmbs['WL Codes'].str.split(',').str.get(5).isin(wl_codes_list)),
                     :]
+
+def geo_graph(df, title):
+    lat = df['latitude'].values
+    lon = df['longitude'].values
+    fig = plt.figure(figsize=(8,8))
+    m = Basemap(llcrnrlon=-119,llcrnrlat=22,urcrnrlon=-64,urcrnrlat=49,
+                projection='lcc',lat_1=33,lat_2=45,lon_0=-95)
+    m.readshapefile('st99_d00', name='states', drawbounds=True)
+    m.scatter(lon, lat, latlon=True, cmap='Reds', alpha=0.50, s=15)
+    plt.title(title)
+    plt.show()
 
 # Bar Graph Function
 def cmbs_bars(dict_data, ylim_high, ylabel, ylim_low=0, title='',
@@ -308,7 +350,6 @@ def cmbs_bars(dict_data, ylim_high, ylabel, ylim_low=0, title='',
             plt.FuncFormatter(
                 lambda x, loc: "{:,}".format(int(x))))
     plt.show()
-
 
 def cmbs_pie(xpie, ypie, x_name, y_name, title='', title_size=15, title_y=0.9,
              x_color='darkblue', y_color='lightgray', text_size='large',

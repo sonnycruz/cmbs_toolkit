@@ -5,9 +5,7 @@ import shutil
 import glob
 import os
 
-
-main_dir = r'C:\Users\storres.759NYY1\Desktop\cmbu\test1'
-
+main_dir = r'C:\Users\....'
 
 def lead_convert(main_folder=main_dir, lead_pattern='Morningstar*',
                 lead_csv='combined.csv', ignore_if_starts_with=None):
@@ -24,7 +22,6 @@ def lead_convert(main_folder=main_dir, lead_pattern='Morningstar*',
         Optional file name for CSV file
     ignore_if_starts_with : string, default None
         Ignore file names that start with argument
-    
 
     Returns
     -------
@@ -40,7 +37,7 @@ def lead_convert(main_folder=main_dir, lead_pattern='Morningstar*',
     * lead_csv argument can have a '.csv' extension
       or be left blank. 'combined.csv' == 'combined'.
     * lead_pattern matches file names that start with
-      argument provided.
+      argument provided.    
     """
 
     os.chdir(main_folder)
