@@ -11,6 +11,7 @@ The main function (optimal_dtypes contained in memory_efficient_df.py) was creat
 
 >> efficient_df = pd.read_csv('df_file.csv', dtype=dtypes_dict)
 
+## More Information
 The function was created by modifying bits of code available in a blogpost posted by dataquest.io and with dataquest.io's permission. 
 
 dataquest page: https://www.dataquest.io/blog/pandas-big-data/
