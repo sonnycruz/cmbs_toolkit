@@ -2,9 +2,11 @@
 
 #### (A collection of functions I created to assist my everyday workflow.)
 
+
 ## Data
 The functions contained herein were created to work with Morningstar Credit Ratings' CMBS loan data. The data can only be accessed with a paid subscription to Morningstar's platform.
 URL: https://ratingagency.morningstar.com/mcr
+
 
 ## Sections
 
