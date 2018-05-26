@@ -1,12 +1,12 @@
 # cmbs_toolkit
 
-#### (A collection of functions I created to assist my everyday workflow.)
+## About
+This repository consists of a collection of functions that I created over the past year and a half while learning Python and working with CMBS loan data as a commercial real estate analyst. 
 
+Although the functions I created were specifically made for CMBS loan data (.CSV files), the functions are, for the most part, flexible enough that they can be used to work with almost any .CSV or excel file. Python has been a great tool to work with large data files and I hope other business analysts find the functions useful.
 
 ## Data
-The functions contained herein were created while working with CMBS loan data. The loan data is proprietary and will not be availble in this repo. 
-
-I hope the functions provide examples of how python/pandas can be utilized when working with excel or csv files within in a business/analyst context.
+Due to the Terms of Use regarding the CMBS loan data, I am not able to provide the CMBS loan data for the public to download.
 
 ## Sections
 
