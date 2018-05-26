@@ -34,9 +34,6 @@ def year_col(df, col, year_col):
 def currency(df, col):
     df[col] = df[col].str.replace("[$(),]","").fillna(0).astype(float)
 
-def rename_col(df, col, new_name):
-    df.rename(columns={col: new_name}, inplace=True)
-
 def drop_cols(df, col_arg, word=False):
     """
     Drop col if col_arg is present in col name.
@@ -68,8 +65,6 @@ def drop_cols(df, col_arg, word=False):
 
 
 # LEAD GENERATOR FILE
-# no dtypes specified results in memory usage: ~214.7 MB
-# memory usage after dtypes specified: ~88.1 MB, 85.4MB in ipython
 cmbsu_dtype_practical = {'Priority': 'uint8', 'Tape Date': 'category', 'Run Date': 'category', 'Unnamed: 3': 'float32', 'Deal ID': 'object', 'Pros ID': 'object', 'Servicer Loan ID': 'category', 'Loan Name': 'object', 'Address': 'object', 'City': 'category', 'State': 'category', 'Zip': 'category', 'MSA': 'category', 'Region': 'category', 'Orig. Loan Balance': 'category', 'Cut-off Loan Balance': 'object', 'Current Loan Balance': 'object', 'P&I Advances': 'category', 'T&I Advances': 'category', 'Other Advances Paid': 'category', 'Cumulative ASER': 'category', 'Accrued Unpaid Adv Int': 'category', 'Total Loan Exposure': 'object', 'Unnamed: 23': 'float32', 'Property Type': 'category', 'Property Sub-Type': 'category', '# of Props': 'uint16', 'Gross Coupon': 'float32', 'Net Coupon': 'float32', 'Unnamed: 29': 'float32', 'Rate Type': 'category', 'Orig. Terms to Maturity (months)': 'uint16', 'Current Terms to Maturity (months)': 'uint16', 'Orig. Amort Terms': 'uint16', 'Current Amort Terms': 'int64', 'Orig. IO Terms': 'float32', 'Current IO Terms': 'float32', 'Seasoning': 'uint16', 'Origination Date': 'object', 'Unnamed: 39': 'float32', 'Securitization Year': 'uint16', 'Maturity Date / ARD': 'object', 'Unnamed: 42': 'float32', 'Prin. Pmt.': 'category', 'Int. Pmt.': 'category', 'Unnamed: 45': 'float32', 'Modification Desc.': 'category', 'Modification Date': 'object', 'Unnamed: 48': 'float32', 'Originator': 'category', 'Master Servicer': 'category', 'Special Servicer': 'category', 'Trustee': 'category', 'Borrower Name': 'category', 'Borrower Address': 'category', 'Borrower City': 'category', 'Borrower State': 'category', 'Borrower Zip': 'category', 'Borrower Contact': 'category', 'Borrower Phone #': 'category', 'County Website': 'category', 'Unnamed: 61': 'float32', 'Appraised Value': 'object', 'Unnamed: 63': 'float32', 'Appraised Date': 'object', 'Sq. Ft.': 'float32', 'Units': 'float32', 'Unnamed: 67': 'float32', 'Year Built': 'float32', 'Year Renovated': 'float32', 'Financial Stmt. Date': 'object', 'Revenue Amt.': 'object', 'Expense Amt.': 'object', 'NOI': 'float32', 'NCF': 'float32', 'Debt Yield': 'category', 'DSCR': 'float32', 'Occupancy Rate (%)': 'float32', 'Current LTV': 'float32', 'Original LTV': 'float32', 'Unnamed: 80': 'float32', 'Lockout': 'uint8', 'Defeasance': 'uint8', 'Yield Maint.': 'uint16', 'Prepay Prem': 'uint16', 'Open': 'int64', 'Unnamed: 86': 'float32', 'Current Call Protection Status': 'category', 'Defeasance Cost': 'float32', 'Prepay Prem Amt.': 'object', 'Prepay Prem % of UPB': 'float32', 'Mstar Cap Rate': 'float32', 'Cap Rate Used for Prop Value': 'float32', 'Estimated Property Value': 'object', 'Estimated LTV': 'float32', 'Payoff Amount': 'float32', 'Refinancing Proceeds': 'object', 'Refinancing Proceeds % of UPB': 'object', 'Unnamed: 98': 'float32', 'Loan Status': 'category', 'Special Serviced Ind': 'category', 'MR SS Xfer Date': 'object', 'Unnamed: 102': 'float32', 'Watchlist Ind': 'category', 'Servicer Watchlist Date': 'object', 'WL Codes': 'category', 'Bankruptcy Ind': 'category', 'B-Piece Buyer': 'category', 'Links': 'float32'}
 cmbs = load_cmbs(file=cmbs_u, main_folder=cmbs_u_dir, dtype=cmbsu_dtype_practical)
 
@@ -88,8 +83,6 @@ cmbs['upb_cat_mm'] = pd.cut(cmbs['Current Loan Balance'] / 1000000, loan_bins)
 
 
 # IRP LOAN DF
-# no dtypes specified results in memory usage: ~340.8 MB
-# memory usage after dtypes specified: ~135.3
 loan_dtype_practical = {'Deal ID': 'object', 'Pros ID': 'object', 'Tape Date': 'category', 'Servicer Loan ID': 'object', 'Servicer Prospectus Loan ID': 'object', 'Asset Name': 'object', 'City': 'category', 'State': 'category', 'ZIP': 'category', 'Current Balance Amount': 'float32', 'Maturity Date': 'category', 'Maturity Months': 'float32', 'Asset Type': 'category', 'Property Subtype': 'category', 'Most Recent Start Date': 'category', 'Most Recent End Date': 'object', 'Most Recent Number of Months': 'float32', 'Most Recent Revenue': 'float32', 'Most Recent Expense': 'float32', 'Most Recent NOI': 'float32', 'Most Recent NCF': 'float32', 'Most Recent NOI DSCR': 'float32', 'Most Recent NCF DSCR': 'float32', 'Most Recent Occupancy Rate': 'float32', 'Most Recent Appraisal Date': 'object', 'Most Recent Appraised Value': 'float32', 'Most Recent Assumption Date': 'object', 'Most Recent Modification': 'category', 'Most Recent Modification Date': 'object', 'Modified Payment Rate': 'float32', 'Modified Rate': 'float32', 'Special Serviced Indicator': 'category', 'Special Servicer': 'category', 'Amortization Type': 'category', 'Hyper Amortization Date': 'category', 'I/O End Date': 'category', 'Workout Code': 'category', 'Workout Fee Amount': 'float32', 'Date Added To Watchlist': 'object', 'Resolution Date': 'category', 'Foreclosure Date': 'category', 'REO Date': 'category', 'Call Protection Summary': 'category', 'Loan Paid To Date': 'object', 'Loan Status Type': 'category', 'Paid Off Date': 'object', 'Appraisal Reduction Amount': 'float32', 'Appraisal Reduction Date': 'category', 'Liquidation Code': 'category', 'Liquidation Expense': 'float32', 'Liquidation Fee Amount': 'float32', 'Net Proceeds Received  on Liquidation ': 'float32', 'Realized Loss': 'float32', 'Servicer Transation ID': 'category', 'Balloon Indicator': 'category', 'Bloomberg Deal ID': 'category', 'Crossed Loan ID': 'category', 'Cumulative ASER': 'float32', 'Most Recent ASER': 'float32', 'Defeasance': 'float32', 'Defeasance Status': 'category', 'Prepayment Penalty': 'float32', 'Prepayment Penalty Amount': 'float32', 'Cumulative Accrued Unpaid Advance Interest': 'float32', 'Other Advances': 'float32', 'Other Principal Adjustments': 'float32', 'P&I Advances': 'float32', 'Reimbursed Interest On Advances': 'float32', 'Special Servicing Fee Amount Plus Adjustments': 'float32', 'T&I Advances': 'float32', 'Previous Year Start Date': 'float32', 'Previous Year End Date': 'object', 'Previous Year Number of Months': 'float32', 'Previous Year Revenue': 'float32', 'Previous Year Expense': 'float32', 'Previous Year NOI': 'float32', 'Previous Year NCF': 'float32', 'Previous Year NOI DSCR': 'float32', 'Previous Year NCF DSCR': 'float32', 'Previous Year Occupancy Rate': 'float32', 'Second Previous Year Start Date': 'float32', 'Second Previous Year End Date': 'object', 'Second Previous Year Number of Months': 'float32', 'Second Previous Year Revenue': 'float32', 'Second Previous Year Expense': 'float32', 'Second Previous Year NOI': 'float32', 'Second Previous Year NCF': 'float32', 'Second Previous Year NOI DSCR': 'float32', 'Second Previous Year NCF DSCR': 'float32', 'Second Previous Year Occupancy Rate': 'float32', 'Issuance Start Date': 'float32', 'Issuance End Date': 'object', 'Issuance Number of Months': 'float32', 'Issuance Revenue': 'float32', 'Issuance Expense': 'float32', 'Issuance NOI': 'float32', 'Issuance NCF': 'float32', 'Issuance NOI DSCR': 'float32', 'Issuance NCF DSCR': 'float32', 'Issuance Occupancy Rate': 'float32', 'Yield Maintenance': 'float32', 'Underwriter': 'category', 'Underwritten DSCR': 'float32', 'Underwritten NOI': 'float32', 'Number Of Properties': 'uint16', 'Most Recent Debt Service': 'float32', 'Most Recent Return Date': 'category', 'Most Recent Transfer Date': 'object', 'MSA': 'category', 'Loan Origination Date': 'object', 'Property Square Feet': 'float32', 'Current Balance per Square Foot': 'float32', 'Bankruptcy Date': 'category', 'Bankruptcy Indicator': 'category', 'Number Of Installments Paid': 'float32', 'Number Of Remaining Installments': 'int64', 'Deal Type': 'category', 'Original Loan Amount': 'float32', 'Original LTV': 'float32', 'Master Servicer ': 'category', 'NOI': 'float32', 'Occupancy Rate': 'float32', 'Original Amortization Term Months': 'uint16', 'Original Interest Only Term': 'float32', 'Debt Yield': 'float32', 'DSCR': 'float32', 'DSCR At Cutoff': 'float32', 'Loan Originator': 'category', 'Remaining Interest Only Term': 'float32', 'Units': 'float32', 'Coupon': 'float32', 'Borrower Name': 'category', 'Trepp Loan ID': 'category', 'Securitized LTV': 'float32', 'Factor': 'float32', 'Total Number Of Installments': 'uint16'}
 loan = load_cmbs(file=irp_loan, main_folder=sup_main_dir, dtype=loan_dtype_practical)
 
@@ -103,8 +96,6 @@ loan['app_upb'] = loan['Most Recent Appraised Value'] - loan['Current Balance Am
 
 
 # IRP PROPERTY DF
-# no dtypes specified results in memory usage: ~178.9 MB
-# memory usage after dtypes specified: ~118 MB
 prop_dtype_practical = {'Deal ID': 'object', 'Pros ID': 'object', 'Property Number': 'category', 'Tape Date': 'category', 'Servicer Loan ID': 'object', 'Servicer Prospectus Loan ID': 'object', 'Property Name': 'object', 'Property Address': 'object', 'Property Square Feet': 'float32', 'Date Lease Rollover Review': 'category', 'Percent Expiring 1-12 months': 'float32', 'Percent Expiring 13-24 months': 'float32', 'Percent Expiring 25-36 months': 'float32', 'Percent Expiring 37-48 months': 'float32', 'Largest Tenant Name': 'object', 'Largest Tenant Square Feet': 'float32', 'Largest Tenant Lease Expiration': 'object', 'Second Largest Tenant Name': 'object', 'Second Largest Tenant Square Feet': 'float32', 'Second Largest Tenant Lease Expiration': 'object', 'Third Largest Tenant Name': 'object', 'Third Largest Tenant Square Feet': 'float32', 'Third Largest Tenant Lease Expiration': 'object', 'Fourth Largest Tenant Name': 'object', 'Fourth Largest Tenant Square Feet': 'float32', 'Fourth Largest Tenant Lease Expiration': 'object', 'Fifth Largest Tenant Name': 'object', 'Fifth Largest Tenant Square Feet': 'float32', 'Fifth Largest Tenant Lease Expiration': 'object', 'Property Type': 'category', 'Current Balance': 'float32', 'State': 'category', 'Year Built': 'float32', 'Year Renovated': 'float32', 'ZIP': 'category', 'City': 'category', 'Ground Lease Indicator': 'float32', 'Credit Tenant Lease': 'category'}
 prop = load_cmbs(file=irp_prop, main_folder=sup_main_dir, dtype=prop_dtype_practical)
 prop_active = prop.loc[prop['Current Balance'] > 0,:]
@@ -209,7 +200,7 @@ def listing_rows(df):
                 print("Record: {} ".format(record))
                 print("Word: {} ".format(address_list[i]))
                 print('\n')
-                yield searchpq(add=next(it), st=state, pr=prop_type)
+                yield search_all(add=next(it), st=state, pr=prop_type)
 
 
 # WATCHLIST CODE:
@@ -244,32 +235,6 @@ wl_data = {'1A': 'Over 2 Payments Due',
            '7A': 'Loan has been Returned from the Special Servicer',
            '7B': 'B note was created, or Cumulative Interest shortfalls, or WODRA repayment Periods'
            }
-
-# Watchlist code columns names for each watchlist code.
-wl_codes_column_names = ['WLC1', 'WLC2', 'WLC3', 'WLC4', 'WLC5', 'WLC6']
-
-# Watchlist code text columns for each watchlist code.
-wl_text_column_names = ['WLT1', 'WLT2', 'WLT3', 'WLT4', 'WLT5', 'WLT6']
-
-def create_wl_cols():
-    for i in range(6):
-        cmbs[wl_codes_column_names[i]] = cmbs['WL Codes'].str.split(',').str.get(i)
-        cmbs[wl_text_column_names[i]] = cmbs[individual_codes[i]].map(wl_data)
-
-# Search for Watchlist codes.
-best_wl= []
-def wl_codes(wl_codes_list):
-    """
-    Pass list of single or multiple values
-    of watch list codes to locate.
-    """
-    return cmbs.loc[(cmbs['WL Codes'].str.split(',').str.get(0).isin(wl_codes_list))
-                    | (cmbs['WL Codes'].str.split(',').str.get(1).isin(wl_codes_list))
-                    | (cmbs['WL Codes'].str.split(',').str.get(2).isin(wl_codes_list))
-                    | (cmbs['WL Codes'].str.split(',').str.get(3).isin(wl_codes_list))
-                    | (cmbs['WL Codes'].str.split(',').str.get(4).isin(wl_codes_list))
-                    | (cmbs['WL Codes'].str.split(',').str.get(5).isin(wl_codes_list)),
-                    :]
 
 def geo_graph(df, title):
     lat = df['latitude'].values
