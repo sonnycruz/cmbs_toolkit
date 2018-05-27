@@ -29,12 +29,22 @@ def date_convert(df, col):
     df[col] = pd.to_datetime(df[col], infer_datetime_format=True)
 
 def year_col(df, col, year_col):
+    """
+    Create a year column for a given datetime column.
+
+    df: DataFrame
+    col : str
+        datetime column to derive year values from
+    year_col : str
+        Column name for the newly created year column
+    """
     df[year_col] = df[col].dt.year
 
 def currency(df, col):
+    """Modify column, in place, w/ currency values to float values."""
     df[col] = df[col].str.replace("[$(),]","").fillna(0).astype(float)
 
-def drop_cols(df, col_arg, word=False):
+def drop_cols(df, col_arg, by_word=False):
     """
     Drop col if col_arg is present in col name.
         
@@ -57,7 +67,7 @@ def drop_cols(df, col_arg, word=False):
     
     >> drop_cols(my_df, col_arg='junk word', word=True)
     """
-    if word:
+    if by_word:
         df.drop(columns=[col for col in df.columns if col_arg in col],
                 inplace=True)
     else:
@@ -106,13 +116,36 @@ cs = load_cmbs(file=listings_file, main_folder=listings_dir)
 
 # Use the IRP Property file and search tenant name.
 def tenant_search(df, tenant):
-    return df.loc[(df['Largest Tenant Name'].str.contains(tenant, case=False))
-                    | (df['Second Largest Tenant Name'].str.contains(tenant, case=False))
-                    | (df['Third Largest Tenant Name'].str.contains(tenant, case=False))
-                    | (df['Fourth Largest Tenant Name'].str.contains(tenant, case=False))
-                    | (df['Fifth Largest Tenant Name'].str.contains(tenant, case=False)),
-                    :]
+    """
+    Search for Tenant Names in the IRP Property File.
 
+    Search utilizes .str.contains() method on each
+    Tenant Column/Series.
+
+    Parameters
+    ----------
+    df : DataFrame
+        DataFrame object (IRP Property file)
+        with the default 'Largest Tenant' columns
+    tenant : string
+        Literal string or regex pattern.
+
+    Returns
+    -------
+    Dataframe with rows containing Tenant Name.
+
+    Example
+    -------
+    >> toys_names = "(toys r us|toys r' us|babies r us|babies r' us)"
+    >> toys_df = tenant_search(df=prop, tenant=toys_names)
+   """
+    return df.loc[
+        (df['Largest Tenant Name'].str.contains(tenant, case=False))
+        | (df['Second Largest Tenant Name'].str.contains(tenant, case=False))
+        | (df['Third Largest Tenant Name'].str.contains(tenant, case=False))
+        | (df['Fourth Largest Tenant Name'].str.contains(tenant, case=False))
+        | (df['Fifth Largest Tenant Name'].str.contains(tenant, case=False)),
+        :]
 
 def searchu(df=cmbs, nm='\w', add='\w', cy= '\w', st='\w', pr='\w'):
     """
@@ -164,7 +197,41 @@ def searchu(df=cmbs, nm='\w', add='\w', cy= '\w', st='\w', pr='\w'):
                    'MR SS Xfer Date']]
 
 
-def searchpq(df=prop_active, nm='\w', add='\w', cy= '\w', st='\w', pr='\w'):
+def searchp(df=prop_active, nm='\w', add='\w', cy= '\w', st='\w', pr='\w'):
+    """
+    Search IRP Property file for Property Name. 
+
+    All parameters, other than df (dataframe), have default
+    values that match any alphanumeric character.
+    All parameters are case-insensitive.
+
+    Parameters
+    ----------
+    nm: str
+        Search Property Name column.
+    add: str
+        Search Address column.
+    cy: str
+        Search City column.
+    st: str
+        Search State column.
+    pr: str
+       Search Property Type column. All Property Type values
+       must be one of the following string values...
+       'multi-family', 'retail', 'industrial', 'office',
+       'hotel' or 'other'.
+
+    Returns
+    -------
+    DataFrame indexed by string parameters.
+
+    Notes
+    -----
+    The IRP Property will not have all the Agency loans in
+    the lead generator files.
+    Also, the Property name does not always equal the loan name,
+    so it is important to know the difference.
+    """
     return df.loc[(df['Property Name'].notnull())
                   & (df['Property Name'].str.contains(nm, case=False))
                   & (df['Property Address'].str.contains(add, case=False))
@@ -313,7 +380,8 @@ def cmbs_bars(dict_data, ylim_high, ylabel, ylim_low=0, title='',
     if y_thousands:
         ax1.get_yaxis().set_major_formatter(
             plt.FuncFormatter(
-                lambda x, loc: "{:,}".format(int(x))))
+                lambda x, loc: "{:,}".format(int(x)))
+            )
     plt.show()
 
 def cmbs_pie(xpie, ypie, x_name, y_name, title='', title_size=15, title_y=0.9,
