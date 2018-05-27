@@ -15,7 +15,7 @@ def lead_convert(main_folder=main_dir, lead_pattern='Morningstar*',
     Parameters
     ----------
     main_folder : string
-        Directory containing Lead Generator Files
+        Directory containing Lead Generator (HTML) Files
     lead_pattern : string, default 'Morningstar*'
         File name pattern to match
     lead_csv : string, default 'combined (date).csv'
