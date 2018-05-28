@@ -18,7 +18,7 @@ def year_col(df, col, year_col):
 
     df: DataFrame
     col : str
-        datetime column to derive year values from
+        datetime column to derive year value from
     year_col : str
         Column name for the newly created year column
     """
@@ -37,7 +37,7 @@ def drop_cols(df, col_arg, by_word=False):
     df : dataframe
     col_arg : str
         Can be word in col names to drop or literal column name
-    word : boolean, default False
+    by_word : boolean, default False
         True if col_arg is keyword in columns to be dropped
         False if col_arg is column name
         
