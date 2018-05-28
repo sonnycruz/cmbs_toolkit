@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import matplotlib.patheffects as path_effects
 
-def cmbs_bars(dict_data, ylim_high, ylabel, ylim_low=0, title='',
+def cmbs_bar(dict_data, ylim_high, ylabel, ylim_low=0, title='',
               y_thousands=True, text_message='', text_c1=0, text_c2=0,
               style='seaborn-bright', bar_color='darkblue', xtick_rotation=0,
               xtick_font='large', facecolor='lightgray', grid_line_style='-',
