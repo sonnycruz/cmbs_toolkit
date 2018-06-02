@@ -1,5 +1,7 @@
 import matplotlib.pyplot as plt
+from mpl_toolkits.basemap import Basemap
 import matplotlib.patheffects as path_effects
+
 
 def cmbs_bar(dict_data, ylim_high, ylabel, ylim_low=0, title='',
               y_thousands=True, text_message='', text_c1=0, text_c2=0,
@@ -124,3 +126,39 @@ def cmbs_pie(xpie, ypie, x_name, y_name, title='', title_size=15, title_y=0.9,
     plt.suptitle(title, fontsize=title_size, y=title_y)
     plt.show()
     plt.rc('font', weight='normal')
+
+
+def geo_graph(df, title, set_alpha=0.50, set_size=15):
+    """
+    Plot scatter plot on U.S. map using location coordinates.
+
+    Functional shortcut for creating simple BaseMap scatter plots.
+
+    Parameters
+    ----------
+    df : DataFrame object
+    title : string
+    set_alpha : float, default 0.5
+    set_size : int, default 15
+
+    Returns
+    -------
+    Basemap object
+
+    Note
+    ----
+    * The coordinates must be series' labeled as
+      'latitude' and 'longitude'.
+    * Working directory must have 'st99_d00' shape
+      file.
+    """
+    
+    lat = df['latitude'].values
+    lon = df['longitude'].values
+    fig = plt.figure(figsize=(8,8))
+    m = Basemap(llcrnrlon=-119,llcrnrlat=22,urcrnrlon=-64,urcrnrlat=49,
+                projection='lcc',lat_1=33,lat_2=45,lon_0=-95)
+    m.readshapefile('st99_d00', name='states', drawbounds=True)
+    m.scatter(lon, lat, latlon=True, cmap='Reds', alpha=set_alpha, s=set_size)
+    plt.title(title)
+    plt.show()
