@@ -56,3 +56,5 @@ def drop_cols(df, col_arg, by_word=False):
                 inplace=True)
     else:
         df.drop(col_arg, axis=1, inplace=True)
+
+# test test test 
