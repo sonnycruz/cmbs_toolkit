@@ -5,14 +5,14 @@ from functools import partial
 from mpl_toolkits.basemap import Basemap
 pd.set_option('display.float_format', lambda x: '%.2f' % x)
 
-cmbs_u_dir = r'C:\Users\storres.759NYY1\Desktop\cmbu\6. all'
+cmbs_u_dir = r'C:\Users\Username\Desktop\cmbu\6. all'
 cmbs_u = 'combined.csv'
 
-sup_main_dir = r'C:\Users\storres.759NYY1\Desktop\cmbu\6. all'
+sup_main_dir = r'C:\Users\Username\Desktop\cmbu\6. all'
 irp_loan = 'loan template 5.24.2017.csv'
 irp_prop = 'occ 8.24.2017.csv'
 
-listings_dir = r'C:\Users\storres.759NYY1\Desktop\Legacy Maturities & Universe\19. May 2018\May Assumptions\0. Data\Set 2'
+listings_dir = r'C:\Users\Username\Desktop\Legacy Maturities & Universe\19. May 2018\May Assumptions\0. Data\Set 2'
 listings_file = 'New_update_new.csv'
 
 def load_cmbs(file, main_folder=cmbs_u_dir, dtype=None, converters=None):
